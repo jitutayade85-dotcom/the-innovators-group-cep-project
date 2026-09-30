@@ -87,6 +87,74 @@ const gu: Dict = {
   helpSub: "કૉલ માટે કાર્ડ દબાવો",
   aboutLine: "મફત મદદ, 24 કલાક ઉપલબ્ધ",
 
+  // Onboarding + profile
+  continue: "આગળ વધો",
+  onbLangTitle: "તમારી ભાષા પસંદ કરો",
+  onbLangSub: "આ પછીથી સેટિંગમાં બદલી શકાય છે",
+  profileTitle: "તમારા વિશે જણાવો",
+  profileSub: "ફક્ત નામ અને ભાષા જરૂરી છે",
+  nameLabel: "તમારું નામ",
+  namePlaceholder: "તમારું નામ લખો",
+  ageLabel: "ઉંમર (વૈકલ્પિક)",
+  agePlaceholder: "દા.ત. 25",
+  placeLabel: "ગામ / શહેર (વૈકલ્પિક)",
+  placePlaceholder: "દા.ત. વાઈ",
+  addPhoto: "ફોટો ઉમેરો",
+  changePhoto: "ફોટો બદલો",
+  saveProfile: "સેવ કરો અને આગળ વધો",
+  nameRequired: "કૃપા કરી તમારું નામ લખો",
+  savingProfile: "સેવ થાય છે…",
+  hello: "નમસ્તે",
+
+  // Home tiles (Phase 1)
+  tileScamCheck: "છેતરરૂપિયું તપાસો",
+  tileScamCheckSub: "શું આ મેસેજ સુરક્ષિત છે?",
+  tileLearnPlay: "શીખો અને રમો",
+  tileLearnPlaySub: "પાઠ અને ક્વિઝ",
+  tileProgress: "મારી પ્રગતિ",
+  tileProgressSub: "તમે શું શીખ્યા તે જુઓ",
+  tileTests: "ટેસ્ટ",
+  tileTestsSub: "તમારું જ્ઞાન તપાસો",
+  tileSos: "SOS મદદ",
+  tileSosSub: "છેતરાયા? તરત કરો",
+  comingSoon: "ટૂંક સમયમાં",
+  settings: "સેટિંગ",
+
+  // Settings
+  settingsTitle: "સેટિંગ",
+  settingsLanguage: "એપની ભાષા",
+  settingsEditProfile: "પ્રોફાઇલ બદલો",
+  settingsSmsScan: "SMS છેતરરૂપિયું તપાસ",
+  settingsSmsScanSub: "ફક્ત Android, એપ ઇન્સ્ટોલ જરૂરી",
+
+  // SMS permission
+  smsExplainTitle: "SMS છેતરરૂપિયું તપાસવું?",
+  smsExplainBody:
+    "અમે તમારા ફોનના આવતા SMS ફક્ત છેતરરૂપિયા વિશે ચેતવવા વાંચીએ છીએ. તમારા મેસેજ ક્યાંય મોકલાતા નથી.",
+  smsEnableBtn: "પરવાનગી આપો અને ચાલુ કરો",
+  smsCancel: "હમણાં નહીં",
+  smsActiveMsg: "SMS તપાસ ચાલુ છે",
+  smsDeniedMsg: "પરવાનગી નકારી. ફોન સેટિંગમાં ચાલુ કરો.",
+  smsUnsupportedMsg: "આ ફક્ત ઇન્સ્ટોલ કરેલી Android એપમાં ચાલે છે.",
+  smsFlagTitle: "શક્ય છેતરરૂપિયા SMS",
+
+  // Check screen (offline + AI)
+  offlineQuickTitle: "ઝડપી તપાસ (ઓફલાઇન)",
+  aiCheckTitle: "AI તપાસ",
+  offlineOnlyNote: "તમે ઓફલાઇન છો — ફક્ત ઝડપી તપાસ બતાવી રહ્યા છીએ.",
+  checkingAi: "AI ને પૂછી રહ્યા છીએ…",
+
+  // SOS
+  sosScreenTitle: "SOS — હમણાં આ કરો",
+  sosScreenSub: "જો છેતરાયા હો તો તરત કરો",
+  sosStepsTitle: "એક-એક પગલું",
+  sosStep1: "બેંકને કૉલ કરો અને કાર્ડ / UPI બ્લોક કરો",
+  sosStep2: "મેસેજ અને પેમેન્ટના સ્ક્રીનશોટ લો",
+  sosStep3: "તમારા પાસવર્ડ અને UPI PIN બદલો",
+  sosStep4: "1930 અને cybercrime.gov.in પર ફરિયાદ કરો",
+  sosPortalTitle: "ઓનલાઇન ફરિયાદ",
+  sosPortalBtn: "cybercrime.gov.in ખોલો",
+
   loading: "લોડ થાય છે…",
   retryBtn: "ફરી પ્રયત્ન કરો",
   errorGeneric: "કંઈક ખોટું થયું",

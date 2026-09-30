@@ -89,3 +89,24 @@ class Helpline(BaseDocument):
 class ScamCheckIn(BaseModel):
     text: str = Field(min_length=3, max_length=2000)
     lang: str = "en"   # language for the returned tips: en | hi | mr | gu
+
+
+# --- User profile (no login yet: keyed by a device_id generated on device) ---
+class Profile(BaseDocument):
+    device_id: str
+    name: str
+    lang: str = "en"
+    age: Optional[int] = None
+    place: Optional[str] = None       # village / city
+    photo_path: Optional[str] = None  # object-storage path (served via /api/files)
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+
+
+class ProfileIn(BaseModel):
+    device_id: str = Field(min_length=4, max_length=100)
+    name: str = Field(min_length=1, max_length=80)
+    lang: str = "en"
+    age: Optional[int] = Field(default=None, ge=1, le=120)
+    place: Optional[str] = Field(default=None, max_length=120)
+    photo_path: Optional[str] = None

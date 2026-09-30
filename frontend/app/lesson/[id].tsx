@@ -146,7 +146,7 @@ export default function LessonDetail() {
             {selected !== null ? (
               <View style={styles.feedback}>
                 <MaterialCommunityIcons
-                  name={isCorrect ? "hand-thumbs-up" : "hand-thumbs-down"}
+                  name={isCorrect ? "thumb-up" : "thumb-down"}
                   size={24}
                   color={isCorrect ? colors.success : colors.error}
                 />

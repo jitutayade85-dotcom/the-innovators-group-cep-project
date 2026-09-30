@@ -86,6 +86,74 @@ const en = {
   helpSub: "Tap a card to call",
   aboutLine: "Free help, available 24x7",
 
+  // Onboarding + profile
+  continue: "Continue",
+  onbLangTitle: "Choose your language",
+  onbLangSub: "You can change this later in Settings",
+  profileTitle: "Tell us about you",
+  profileSub: "Only name and language are needed",
+  nameLabel: "Your name",
+  namePlaceholder: "Enter your name",
+  ageLabel: "Age (optional)",
+  agePlaceholder: "e.g. 25",
+  placeLabel: "Village / City (optional)",
+  placePlaceholder: "e.g. Wai",
+  addPhoto: "Add photo",
+  changePhoto: "Change photo",
+  saveProfile: "Save & Continue",
+  nameRequired: "Please enter your name",
+  savingProfile: "Saving…",
+  hello: "Hello",
+
+  // Home tiles (Phase 1)
+  tileScamCheck: "Scam Check",
+  tileScamCheckSub: "Is this message safe?",
+  tileLearnPlay: "Learn & Play",
+  tileLearnPlaySub: "Lessons and quizzes",
+  tileProgress: "My Progress",
+  tileProgressSub: "See what you learned",
+  tileTests: "Tests",
+  tileTestsSub: "Check your knowledge",
+  tileSos: "SOS Help",
+  tileSosSub: "Got cheated? Act fast",
+  comingSoon: "Coming soon",
+  settings: "Settings",
+
+  // Settings
+  settingsTitle: "Settings",
+  settingsLanguage: "App language",
+  settingsEditProfile: "Edit profile",
+  settingsSmsScan: "Scan SMS for scams",
+  settingsSmsScanSub: "Android only, needs app install",
+
+  // SMS permission
+  smsExplainTitle: "Scan SMS for scams?",
+  smsExplainBody:
+    "We read incoming SMS on your phone only to warn you about scam messages. Your messages are never sent anywhere.",
+  smsEnableBtn: "Allow & Turn On",
+  smsCancel: "Not now",
+  smsActiveMsg: "SMS scanning is on",
+  smsDeniedMsg: "Permission denied. You can allow it in phone Settings.",
+  smsUnsupportedMsg: "This works only on an installed Android app.",
+  smsFlagTitle: "Possible scam SMS",
+
+  // Check screen (offline + AI)
+  offlineQuickTitle: "Quick check (offline)",
+  aiCheckTitle: "AI check",
+  offlineOnlyNote: "You are offline — showing quick check only.",
+  checkingAi: "Asking AI…",
+
+  // SOS
+  sosScreenTitle: "SOS — Do this now",
+  sosScreenSub: "If you were cheated, act fast",
+  sosStepsTitle: "Step-by-step",
+  sosStep1: "Call your bank and block the card / UPI",
+  sosStep2: "Take screenshots of the message and payment",
+  sosStep3: "Change your passwords and UPI PIN",
+  sosStep4: "Report on 1930 and cybercrime.gov.in",
+  sosPortalTitle: "Report online",
+  sosPortalBtn: "Open cybercrime.gov.in",
+
   loading: "Loading…",
   retryBtn: "Retry",
   errorGeneric: "Something went wrong",

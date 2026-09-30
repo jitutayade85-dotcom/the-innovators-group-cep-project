@@ -18,7 +18,7 @@ export default function TabsLayout() {
   if (usesNativeTabs) {
     return (
       <NativeTabs>
-        <NativeTabs.Trigger name="index">
+        <NativeTabs.Trigger name="home">
           <NativeTabs.Trigger.Icon sf="house.fill" />
           <NativeTabs.Trigger.Label>{t.tabHome}</NativeTabs.Trigger.Label>
         </NativeTabs.Trigger>
@@ -49,7 +49,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: t.tabHome,
           tabBarIcon: ({ color, size }) => (

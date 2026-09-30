@@ -11,17 +11,22 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
+import requests
 from bson import ObjectId
 from dotenv import load_dotenv
 from emergentintegrations.llm.chat import LlmChat, UserMessage
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import APIRouter, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.responses import Response
 from motor.motor_asyncio import AsyncIOMotorClient
+from starlette.concurrency import run_in_threadpool
 from starlette.middleware.cors import CORSMiddleware
 
 from models import (
     Alert,
     Helpline,
     Lesson,
+    Profile,
+    ProfileIn,
     ScamCheckIn,
 )
 from seed_data import SEED_LESSONS, SEED_ALERTS, SEED_HELPLINES
@@ -38,6 +43,52 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Emergent Object Storage — the app never talks to storage directly.
+# It uploads a photo to OUR backend; we store it and stream it back.
+# The EMERGENT_LLM_KEY (used to authenticate to storage) stays server-side.
+# ---------------------------------------------------------------------------
+STORAGE_BASE = (os.environ.get("INTEGRATION_PROXY_URL") or "").strip() or "https://integrations.emergentagent.com"
+STORAGE_URL = STORAGE_BASE.rstrip("/") + "/objstore/api/v1/storage"
+EMERGENT_KEY = os.environ.get("EMERGENT_LLM_KEY")
+APP_NAME = "surakshit-digital"
+_storage_key: str | None = None
+
+
+def init_storage() -> str:
+    """Call once; returns a reusable storage key (idempotent)."""
+    global _storage_key
+    if _storage_key:
+        return _storage_key
+    resp = requests.post(f"{STORAGE_URL}/init", json={"emergent_key": EMERGENT_KEY}, timeout=30)
+    resp.raise_for_status()
+    _storage_key = resp.json()["storage_key"]
+    return _storage_key
+
+
+def put_object(path: str, data: bytes, content_type: str) -> dict:
+    key = init_storage()
+    resp = requests.put(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key, "Content-Type": content_type},
+        data=data,
+        timeout=120,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def get_object(path: str) -> tuple[bytes, str]:
+    key = init_storage()
+    resp = requests.get(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key},
+        timeout=60,
+    )
+    resp.raise_for_status()
+    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
 
 
 # ---------------------------------------------------------------------------
@@ -60,6 +111,10 @@ async def seed_if_empty():
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     await seed_if_empty()
+    try:
+        await run_in_threadpool(init_storage)  # warm the storage key
+    except Exception as e:
+        logger.warning("Object storage init skipped: %s", e)
     yield
     client.close()
 
@@ -75,13 +130,13 @@ async def root():
     return {"message": "Surakshit Digital API is running"}
 
 
-@api_router.get("/lessons", response_model=List[Lesson])
+@api_router.get("/lessons", response_model=List[Lesson], response_model_by_alias=False)
 async def get_lessons():
     docs = await db.lessons.find().sort("order", 1).to_list(200)
     return [Lesson.from_mongo(d) for d in docs]
 
 
-@api_router.get("/lessons/{lesson_id}", response_model=Lesson)
+@api_router.get("/lessons/{lesson_id}", response_model=Lesson, response_model_by_alias=False)
 async def get_lesson(lesson_id: str):
     try:
         oid = ObjectId(lesson_id)
@@ -93,16 +148,73 @@ async def get_lesson(lesson_id: str):
     return Lesson.from_mongo(doc)
 
 
-@api_router.get("/alerts", response_model=List[Alert])
+@api_router.get("/alerts", response_model=List[Alert], response_model_by_alias=False)
 async def get_alerts():
     docs = await db.alerts.find().sort("published_at", -1).to_list(200)
     return [Alert.from_mongo(d) for d in docs]
 
 
-@api_router.get("/helplines", response_model=List[Helpline])
+@api_router.get("/helplines", response_model=List[Helpline], response_model_by_alias=False)
 async def get_helplines():
     docs = await db.helplines.find().sort("order", 1).to_list(200)
     return [Helpline.from_mongo(d) for d in docs]
+
+
+# ---------------------------------------------------------------------------
+# Profile (no login: identified by a device_id generated on the phone).
+# ---------------------------------------------------------------------------
+@api_router.get("/profile/{device_id}", response_model=Profile, response_model_by_alias=False)
+async def get_profile(device_id: str):
+    doc = await db.profiles.find_one({"device_id": device_id})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return Profile.from_mongo(doc)
+
+
+@api_router.post("/profile", response_model=Profile, response_model_by_alias=False)
+async def upsert_profile(body: ProfileIn):
+    now = datetime.now(timezone.utc).isoformat()
+    update = body.model_dump()
+    update["updated_at"] = now
+    result = await db.profiles.find_one_and_update(
+        {"device_id": body.device_id},
+        {"$set": update, "$setOnInsert": {"created_at": now}},
+        upsert=True,
+        return_document=True,
+    )
+    return Profile.from_mongo(result)
+
+
+# ---------------------------------------------------------------------------
+# Photo upload -> Emergent Object Storage. Returns the stored path; the app
+# saves that path on the profile and displays it via GET /files/{path}.
+# ---------------------------------------------------------------------------
+@api_router.post("/upload")
+async def upload_photo(device_id: str = Form(...), file: UploadFile = File(...)):
+    data = await file.read()
+    if len(data) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Photo too large (max 5MB)")
+    ext = (file.filename or "photo.jpg").rsplit(".", 1)[-1].lower()
+    if ext not in {"jpg", "jpeg", "png", "webp", "heic"}:
+        ext = "jpg"
+    path = f"{APP_NAME}/uploads/{device_id}/{uuid.uuid4()}.{ext}"
+    content_type = file.content_type or "image/jpeg"
+    try:
+        await run_in_threadpool(put_object, path, data, content_type)
+    except Exception as e:
+        logger.error("upload failed: %s", e)
+        raise HTTPException(status_code=502, detail="Could not save photo")
+    return {"path": path, "url": f"/api/files/{path}"}
+
+
+@api_router.get("/files/{path:path}")
+async def serve_file(path: str):
+    try:
+        content, content_type = await run_in_threadpool(get_object, path)
+    except Exception as e:
+        logger.error("serve_file failed for %s: %s", path, e)
+        raise HTTPException(status_code=404, detail="File not found")
+    return Response(content=content, media_type=content_type)
 
 
 # ---------------------------------------------------------------------------

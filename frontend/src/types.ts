@@ -53,3 +53,24 @@ export interface ScamCheckResult {
   confidence: number;
   tips: string[];
 }
+
+export interface Profile {
+  id?: string;
+  device_id: string;
+  name: string;
+  lang: LangCode;
+  age?: number | null;
+  place?: string | null;
+  photo_path?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface ProfileInput {
+  device_id: string;
+  name: string;
+  lang: LangCode;
+  age?: number | null;
+  place?: string | null;
+  photo_path?: string | null;
+}

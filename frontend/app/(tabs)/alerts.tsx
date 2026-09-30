@@ -32,7 +32,7 @@ export default function Alerts() {
         </View>
         {/* Warning banner */}
         <View style={styles.banner}>
-          <MaterialCommunityIcons name="megaphone" size={24} color={colors.onWarning} />
+          <MaterialCommunityIcons name="bullhorn" size={24} color={colors.onWarning} />
           <Text style={styles.bannerText}>{t.alertsSub}</Text>
         </View>
       </View>

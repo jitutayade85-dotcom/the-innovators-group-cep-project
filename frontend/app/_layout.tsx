@@ -11,6 +11,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/src/components/error-boundary";
 import { queryClient } from "@/src/query-client";
 import { LanguageProvider } from "@/src/i18n";
+import { ProfileProvider } from "@/src/features/profile/ProfileContext";
 
 // Disable logbox errors etc so that users can see the app
 // and agent works as expected.
@@ -34,7 +35,9 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <KeyboardProvider>
           <LanguageProvider>
-            <Stack screenOptions={{ headerShown: false }} />
+            <ProfileProvider>
+              <Stack screenOptions={{ headerShown: false }} />
+            </ProfileProvider>
           </LanguageProvider>
         </KeyboardProvider>
       </QueryClientProvider>

@@ -9,14 +9,18 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.emergent.surakshitdigital.a9mkeo"
+      "bundleIdentifier": "com.emergent.surakshitdigital.a9mkeo",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Set your profile picture from your gallery"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.emergent.surakshitdigital.a9mkeo"
+      "package": "com.emergent.surakshitdigital.a9mkeo",
+      "permissions": ["RECEIVE_SMS", "READ_SMS", "POST_NOTIFICATIONS"]
     },
     "web": {
       "bundler": "metro",
@@ -39,7 +43,14 @@
       "expo-secure-store",
       "expo-web-browser",
       "expo-status-bar",
-      "@react-native-vector-icons/material-design-icons"
+      "@react-native-vector-icons/material-design-icons",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Set your profile picture from your gallery"
+        }
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true

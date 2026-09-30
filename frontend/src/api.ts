@@ -2,11 +2,21 @@
 // OFFLINE RULE: every GET is saved to local storage. If the network fails
 // (rural connectivity!), we return the last saved copy instead of crashing.
 
+import { Platform } from "react-native";
 import { storage } from "@/src/utils/storage";
-import type { Alert, Helpline, LangCode, Lesson, ScamCheckResult } from "./types";
+import type {
+  Alert,
+  Helpline,
+  LangCode,
+  Lesson,
+  Profile,
+  ProfileInput,
+  ScamCheckResult,
+} from "./types";
 
 // EXPO_PUBLIC_BACKEND_URL comes from frontend/.env (never hardcode URLs).
-const BASE_URL = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`;
+const ROOT_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+const BASE_URL = `${ROOT_URL}/api`;
 
 const TIMEOUT_MS = 20000;
 
@@ -56,4 +66,46 @@ export async function checkScam(text: string, lang: LangCode): Promise<ScamCheck
   } finally {
     clearTimeout(timer);
   }
+}
+
+// --- Profile ---
+export async function fetchProfile(deviceId: string): Promise<Profile> {
+  const res = await fetch(`${BASE_URL}/profile/${deviceId}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as Profile;
+}
+
+export async function saveProfile(body: ProfileInput): Promise<Profile> {
+  const res = await fetch(`${BASE_URL}/profile`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as Profile;
+}
+
+// Upload a profile photo (multipart). Native and web need different body shapes.
+export async function uploadPhoto(
+  deviceId: string,
+  uri: string,
+): Promise<{ path: string; url: string }> {
+  const form = new FormData();
+  form.append("device_id", deviceId);
+  const name = `photo-${Date.now()}.jpg`;
+  if (Platform.OS === "web") {
+    const blob = await (await fetch(uri)).blob();
+    form.append("file", blob, name);
+  } else {
+    // React Native multipart file shape
+    form.append("file", { uri, name, type: "image/jpeg" } as any);
+  }
+  const res = await fetch(`${BASE_URL}/upload`, { method: "POST", body: form });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as { path: string; url: string };
+}
+
+// Build a full URL to display a stored photo.
+export function fileUrl(path: string): string {
+  return `${ROOT_URL}/api/files/${path}`;
 }

@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Modal, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
 import { LANGUAGES, LangCode, useLanguage } from "@/src/i18n";
@@ -16,6 +17,7 @@ interface Props {
 export function LanguageSheet({ visible, onClose }: Props) {
   const { colors } = useTheme();
   const { lang, setLang } = useLanguage();
+  const insets = useSafeAreaInsets();
   const styles = useStyles();
 
   const pick = (code: LangCode) => {
@@ -26,7 +28,7 @@ export function LanguageSheet({ visible, onClose }: Props) {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={undefined}>
+        <Pressable style={[styles.sheet, { paddingBottom: insets.bottom + spacing.lg }]} onPress={undefined}>
           <Text style={styles.title}>🌐 Language / भाषा / भाषा / ભાષા</Text>
           {LANGUAGES.map((l) => {
             const active = l.code === lang;

@@ -87,6 +87,74 @@ const mr: Dict = {
   helpSub: "कॉलसाठी कार्ड दाबा",
   aboutLine: "मोफत मदत, 24 तास उपलब्ध",
 
+  // Onboarding + profile
+  continue: "पुढे जा",
+  onbLangTitle: "तुमची भाषा निवडा",
+  onbLangSub: "हे नंतर सेटिंगमध्ये बदलता येते",
+  profileTitle: "तुमच्याबद्दल सांगा",
+  profileSub: "फक्त नाव आणि भाषा आवश्यक",
+  nameLabel: "तुमचे नाव",
+  namePlaceholder: "तुमचे नाव लिहा",
+  ageLabel: "वय (ऐच्छिक)",
+  agePlaceholder: "उदा. 25",
+  placeLabel: "गाव / शहर (ऐच्छिक)",
+  placePlaceholder: "उदा. वाई",
+  addPhoto: "फोटो जोडा",
+  changePhoto: "फोटो बदला",
+  saveProfile: "सेव करा आणि पुढे जा",
+  nameRequired: "कृपया तुमचे नाव लिहा",
+  savingProfile: "सेव होत आहे…",
+  hello: "नमस्कार",
+
+  // Home tiles (Phase 1)
+  tileScamCheck: "फसवणूक तपासा",
+  tileScamCheckSub: "हा मेसेज सुरक्षित आहे का?",
+  tileLearnPlay: "शिका आणि खेळा",
+  tileLearnPlaySub: "धडे आणि क्विझ",
+  tileProgress: "माझी प्रगती",
+  tileProgressSub: "तुम्ही काय शिकलात पहा",
+  tileTests: "टेस्ट",
+  tileTestsSub: "तुमचे ज्ञान तपासा",
+  tileSos: "SOS मदत",
+  tileSosSub: "फसवणूक झाली? लगेच करा",
+  comingSoon: "लवकरच येत आहे",
+  settings: "सेटिंग",
+
+  // Settings
+  settingsTitle: "सेटिंग",
+  settingsLanguage: "ॲपची भाषा",
+  settingsEditProfile: "प्रोफाइल बदला",
+  settingsSmsScan: "SMS ची फसवणूक तपासणी",
+  settingsSmsScanSub: "फक्त Android, ॲप इन्स्टॉल आवश्यक",
+
+  // SMS permission
+  smsExplainTitle: "SMS ची फसवणूक तपासायची?",
+  smsExplainBody:
+    "आम्ही तुमच्या फोनवरील येणारे SMS फक्त फसवणूकीबद्दल सावध करण्यासाठी वाचतो. तुमचे मेसेज कुठेही पाठवले जात नाहीत.",
+  smsEnableBtn: "परवानगी द्या आणि सुरू करा",
+  smsCancel: "आत्ता नको",
+  smsActiveMsg: "SMS तपासणी सुरू आहे",
+  smsDeniedMsg: "परवानगी नाकारली. फोन सेटिंगमध्ये सुरू करा.",
+  smsUnsupportedMsg: "हे फक्त इन्स्टॉल केलेल्या Android ॲपमध्ये चालते.",
+  smsFlagTitle: "संभाव्य फसवणूक SMS",
+
+  // Check screen (offline + AI)
+  offlineQuickTitle: "झटपट तपासणी (ऑफलाइन)",
+  aiCheckTitle: "AI तपासणी",
+  offlineOnlyNote: "तुम्ही ऑफलाइन आहात — फक्त झटपट तपासणी दाखवत आहोत.",
+  checkingAi: "AI ला विचारत आहोत…",
+
+  // SOS
+  sosScreenTitle: "SOS — आत्ता हे करा",
+  sosScreenSub: "फसवणूक झाली असेल तर लगेच करा",
+  sosStepsTitle: "एक-एक पायरी",
+  sosStep1: "बँकेला कॉल करा आणि कार्ड / UPI ब्लॉक करा",
+  sosStep2: "मेसेज आणि पेमेंटचे स्क्रीनशॉट घ्या",
+  sosStep3: "तुमचे पासवर्ड आणि UPI PIN बदला",
+  sosStep4: "1930 आणि cybercrime.gov.in वर तक्रार करा",
+  sosPortalTitle: "ऑनलाइन तक्रार",
+  sosPortalBtn: "cybercrime.gov.in उघडा",
+
   loading: "लोड होत आहे…",
   retryBtn: "पुन्हा प्रयत्न करा",
   errorGeneric: "काहीतरी चुकीचे झाले",

@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only retest for Surakshit Digital. Language sheet safe-area fix PASSES: all 4 options (English/हिन्दी/मराठी/ગુજરાતી) fit within 390x844 (ગુજરાતી bottom=828/844), Hindi switch translates Home strings + tab labels, English restore works. Learn tab renders 7 category chips and 6 lesson cards. Helplines screen renders SOS 1930 banner, back button, and 5 helpline cards. Repeated tab navigation shows no crash. HOWEVER a CRITICAL blocking regression was found: backend endpoints /api/lessons, /api/alerts, /api/helplines return MongoDB _id instead of id — every lesson.id / alert.id / helpline.id is undefined on the client, so router.push(`/lesson/${item.id}`) navigates to /lesson/undefined and the lesson detail screen fails with 'Something went wrong'. This blocks the entire lesson-detail → quiz → result → done-badge flow. All lesson-card/alert-card/helpline-card data-testids render literally as `lesson-card-undefined` etc. The console also logs a React 'each child in a list should have a unique key prop' warning coming from a VirtualizedList child, consistent with duplicate `undefined` keys. Check tab UI was not visually retested because the browser session got stuck after the lesson-detail failure, but /api/check-scam works fine via curl and returns verdict/confidence/tips.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "GET /api/lessons", "issue": "Returns MongoDB _id (ObjectId string) but no `id` field. Frontend expects `id` — lesson.id is undefined so lesson detail navigation is broken (/lesson/undefined -> Something went wrong).", "priority": "CRITICAL"},
+      {"endpoint": "GET /api/alerts", "issue": "Same: returns `_id` and no `id`. AlertCard rendering works (uses other fields) but any downstream id-dependent logic will break.", "priority": "HIGH"},
+      {"endpoint": "GET /api/helplines", "issue": "Same: returns `_id` and no `id`. Helpline cards render but per-card testIDs become `helpline-card-undefined`.", "priority": "HIGH"}
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "LessonCard / AlertCard / HelplineCard", "issue": "testID uses `item.id` which is undefined because backend returns `_id`. All list items get identical testID like `lesson-card-undefined`, and React logs 'each child should have a unique key prop'.", "testID": "lesson-card-undefined", "priority": "HIGH"}
+    ],
+    "integration_issues": [
+      {"flow": "Learn -> lesson detail -> quiz -> result -> done badge", "issue": "Blocked end-to-end. Tapping any lesson card calls router.push(`/lesson/${item.id}`) where item.id is undefined, so the detail screen renders the generic error state ('Something went wrong'). Quiz options, quiz-finish-button, result screen, and Done badge on Learn list COULD NOT be verified because the flow never reaches lesson detail.", "affected_testIDs": ["lesson-card-*", "lesson-detail-screen", "lesson-take-quiz-button", "quiz-option-0", "quiz-finish-button", "quiz-more-lessons-button"]}
+    ],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_3.json"],
+  "action_items": [
+    "Backend: strip Mongo `_id` and expose an `id: str` field on lessons, alerts, and helplines (either alias `_id` to `id` in the Pydantic model with json_encoders / model_validator, or map `_id` -> `id` in the response serializer). Do NOT expose `_id` — it should be excluded per repo rules.",
+    "After the backend fix, retest: (a) Learn card tap navigates to /lesson/<id> and shows lesson-detail-screen, (b) quiz flow: tap lesson-take-quiz-button -> quiz-option-0 shows correct/wrong feedback -> quiz-finish-button -> result screen with score, (c) router.back returns to Learn list and the completed lesson shows a Done badge.",
+    "Confirm React 'unique key prop' warning disappears once `id` is a real value.",
+    "Alerts card share-button testID naming: components use `alerts-share-{id}` (plural) while the review request mentions 'share button'; naming is fine but note the plural for future tests."
+  ],
+  "critical_code_review_comments": [
+    "Backend must exclude/rename MongoDB `_id` before returning JSON. All list endpoints currently leak `_id` and omit `id`, which is a repo-rule violation and directly breaks the client.",
+    "Frontend LessonCard / AlertCard / HelplineCard should defensively guard testID when id is missing (e.g. testID={`lesson-card-${lesson.id ?? 'unknown'}`}) so duplicate-key warnings and undefined routes fail loudly during dev."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not-retested (contract regression found via manual curl on 3 GET endpoints)", "frontend": "~55% (language sheet, Learn list, Helplines, tab nav all pass; lesson-detail + quiz + result + done-badge blocked; Check tab UI verified only via API not UI due to session state)"},
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "After main agent fixes the `_id`->`id` serialization, retest the FULL lesson->quiz->result->done-badge flow (testIDs: lesson-card-*, lesson-detail-screen, lesson-take-quiz-button, quiz-option-*, quiz-finish-button, quiz-more-lessons-button). Also visually retest Check tab: `check-example-lottery` -> `check-submit-button` -> verdict-card with confidence bar + 2-3 tips (AI takes ~5-20s). Language sheet + Helplines already confirmed passing this iteration. On web, expo-router tabs are NOT clickable via `get_by_text('Learn')` because a child SVG intercepts; use direct URL navigation (page.goto('/learn'), '/check', '/alerts', '/') instead of clicking the tab bar.",
+  "rca_of_issue": "Reproduction: `curl https://surakshit-digital.preview.emergentagent.com/api/lessons` returns objects whose only identifier is `_id` (Mongo ObjectId string) — there is no `id` field. In /app/frontend/app/(tabs)/learn.tsx the FlatList uses `keyExtractor={(item) => item.id}` and `onPress={() => router.push(`/lesson/${item.id}`)}`, both of which evaluate to `undefined`. Same pattern in AlertCard/HelplineCard for testID. Mitigation: in backend server.py, after MongoDB queries, map each doc to include `id = str(doc['_id'])` and drop `_id` from the response (or use Pydantic `alias='_id'` with `by_alias=False` and a `@field_validator` that stringifies). This is a well-known Mongo+FastAPI serialization pattern and is explicitly called out in this repo's rules ('MongoDB ObjectID is not JSON serializable. If you find mongodb _id, simply exclude it from the main code'). Once fixed, all downstream flows (navigation, keys, testIDs, completed-lesson marking) will start working without any frontend change."
+}

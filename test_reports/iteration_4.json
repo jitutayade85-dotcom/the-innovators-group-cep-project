@@ -1,0 +1,31 @@
+{
+  "summary": "Phase-1 backend + frontend test PASSES. Backend: 10/10 pytest cases green (list endpoints expose `id` not `_id`; profile POST creates and upserts on same device_id, GET 404 for unknown device; validation returns 422 for empty name and for age out of 1-120; POST /api/upload stores a real PNG in Emergent Object Storage and GET /api/files/{path} streams the bytes back with an image/* content-type; POST /api/check-scam returns {verdict, confidence, tips} shape). The previous iteration_3 regression (_id leaking) is FIXED. Frontend (Expo web preview, 390x844): first-launch language screen shows all 4 native names and highlights on tap; Continue navigates to profile-screen; empty-name save shows profile-name-error and stays on profile; entering a name saves and navigates to Home with the Hindi greeting `नमस्ते, TestUser`. Home renders all 5 tiles (scam-check, learn-play, sos, progress, tests); progress and tests correctly carry aria-disabled=true (not tappable). Scam Check offline-first works: lottery example -> offline-verdict-card 'Scam! Free lottery and prize offers are fake.' instantly, then ai-verdict-card 'Scam! 99%' with 3 tips within ~5s. Safe message ('Hi, are we meeting for tea...') -> offline card 'Mostly Safe'. SOS screen renders 1930 banner + Call Now, 4 checklist steps, sos-portal-button (cybercrime.gov.in) and all 5 sos-helpline-* items. Settings screen shows language row, edit-profile row, and SMS row; tapping SMS row opens dialog with allow/cancel; allow shows settings-sms-note ('This works only on an installed Android app.') as expected on web. Edit profile from Settings opens profile in edit mode with profile-back-button. Language switch via home-language-button persists (Hindi text visible on Home). Repeated cycling across /home /learn /check /alerts (2 rounds) shows no red screen or 'Something went wrong'. Only console noise is expo-notifications web warnings (harmless).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_phase1.py",
+    "/app/test_reports/pytest/pytest_phase1.xml",
+    "/app/test_reports/iteration_4.json"
+  ],
+  "action_items": [
+    "None blocking. Optional: SOS helpline list is inside a nested ScrollView/virtualized region; consider ensuring initialNumToRender covers all 5 items so testIDs are queryable without scrolling (currently they render on scroll-into-view — verified by scroll+queryAll)."
+  ],
+  "critical_code_review_comments": [
+    "server.py: /api/upload propagates upstream storage 401/403 as generic 502. Consider surfacing the upstream status for easier debugging in dev (non-blocking).",
+    "server.py check-scam catches Exception broadly and always returns 502 'AI could not analyze this message'; safe as-is, but consider logging the model reply on parse-failure to distinguish LLM outages from bad JSON."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_phase1.py (new — pytest suite for Phase-1 endpoints)"
+  ],
+  "success_rate": {"backend": "100% (10/10 pytest)", "frontend": "100% of Phase-1 review checklist verified on mobile viewport 390x844"},
+  "seed_data_creation": "Test profiles are created with device_id prefix TEST_ and are self-contained per test module.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "All Phase-1 acceptance criteria are green. If further changes touch the profile upsert, re-run /app/backend/tests/test_phase1.py. For UI, the flow to reproduce first-launch is: clear localStorage on the preview origin, reload, expect [data-testid=onboarding-language-continue]. Notes: (a) Playwright browser sessions don't persist localStorage between separate mcp_browser_automation calls, so onboarding will replay each run — this is a test-harness artifact, not a bug. (b) sos-helpline-* items live at the bottom of the SOS ScrollView; scroll before querying if the viewport is short. (c) tel: and Linking.openSettings are native-only and expectedly no-op on web. (d) SMS scanner is Android-native-only; settings-sms-note is the correct web fallback.",
+  "rca_of_issue": "N/A — no failing cases. Prior iteration_3 blocker (_id vs id) is fixed by response_model_by_alias=False + BaseDocument.from_mongo mapping _id -> str id in /app/backend/models.py."
+}

@@ -1,0 +1,66 @@
+{
+  "en": {
+    "signals": [
+      { "id": "otp", "weight": "high", "reason": "It asks for your OTP or PIN. Never share these.", "keywords": ["otp", "one time password", "o.t.p", "verification code", "cvv", "pin number", "share the code", "enter your pin"] },
+      { "id": "kyc", "weight": "high", "reason": "It asks for a KYC update. Banks never ask this by SMS.", "keywords": ["kyc", "re-kyc", "kyc update", "kyc expired", "update your kyc", "pan card update", "aadhaar update link"] },
+      { "id": "blocked", "weight": "high", "reason": "It says your account is blocked to scare you.", "keywords": ["account blocked", "account suspended", "account will be closed", "card blocked", "account frozen", "will be deactivated", "account on hold"] },
+      { "id": "lottery", "weight": "high", "reason": "Free lottery and prize offers are fake.", "keywords": ["lottery", "you won", "you have won", "congratulations", "prize", "lucky winner", "cash prize", "kbc", "jackpot"] },
+      { "id": "fee", "weight": "high", "reason": "It asks you to pay a fee first. This is a common trick.", "keywords": ["processing fee", "registration fee", "pay to claim", "refundable fee", "send money", "gst charge", "clearance fee", "pay rs"] },
+      { "id": "refund", "weight": "medium", "reason": "Fake refund or cashback offers steal money.", "keywords": ["refund", "cashback", "claim your refund", "income tax refund", "get your money back"] },
+      { "id": "job", "weight": "medium", "reason": "Work-from-home jobs with big pay are usually fake.", "keywords": ["work from home", "earn daily", "part time job", "earn money online", "daily income", "like and earn", "task and earn"] }
+    ],
+    "urgency": ["urgent", "immediately", "within 2 hours", "act now", "last chance", "hurry", "today only", "expire", "expiry", "limited time", "within 24 hours"],
+    "safeReason": "No danger words found. But always stay careful.",
+    "suspiciousReason": "Some words look risky. Be careful.",
+    "scamReason": "This looks like a scam. High risk — do not trust it.",
+    "linkReason": "It has a short or strange link. Do not open it."
+  },
+  "hi": {
+    "signals": [
+      { "id": "otp", "weight": "high", "reason": "यह OTP या PIN माँग रहा है। इन्हें कभी न बताएँ।", "keywords": ["otp", "ओटीपी", "पिन", "verification code", "cvv", "कोड बताएं", "code share"] },
+      { "id": "kyc", "weight": "high", "reason": "यह KYC अपडेट माँग रहा है। बैंक SMS पर यह नहीं पूछता।", "keywords": ["kyc", "केवाईसी", "kyc update", "पैन अपडेट", "aadhaar update"] },
+      { "id": "blocked", "weight": "high", "reason": "यह डराने के लिए कहता है कि खाता बंद है।", "keywords": ["account blocked", "खाता बंद", "खाता ब्लॉक", "card blocked", "बंद हो जाएगा", "deactivate"] },
+      { "id": "lottery", "weight": "high", "reason": "मुफ्त लॉटरी और इनाम के मैसेज झूठे होते हैं।", "keywords": ["lottery", "लॉटरी", "you won", "इनाम जीता", "बधाई", "prize", "जैकपॉट", "kbc"] },
+      { "id": "fee", "weight": "high", "reason": "यह पहले फीस माँगता है। यह आम ठगी है।", "keywords": ["processing fee", "फीस", "पैसे भेजें", "send money", "gst", "शुल्क", "pay rs"] },
+      { "id": "refund", "weight": "medium", "reason": "नकली रिफंड और कैशबैक पैसे चुरा लेते हैं।", "keywords": ["refund", "रिफंड", "cashback", "कैशबैक", "पैसे वापस"] },
+      { "id": "job", "weight": "medium", "reason": "घर बैठे बड़ी कमाई वाली नौकरी अक्सर झूठी होती है।", "keywords": ["work from home", "घर बैठे", "रोज़ कमाओ", "part time", "earn online", "task and earn"] }
+    ],
+    "urgency": ["urgent", "तुरंत", "जल्दी", "act now", "आखिरी मौका", "आज ही", "expire", "समाप्त", "24 घंटे"],
+    "safeReason": "कोई खतरे वाला शब्द नहीं मिला। फिर भी सावधान रहें।",
+    "suspiciousReason": "कुछ शब्द जोखिम वाले लगते हैं। सावधान रहें।",
+    "scamReason": "यह ठगी जैसा लगता है। ज़्यादा खतरा — भरोसा न करें।",
+    "linkReason": "इसमें छोटा या अजीब लिंक है। उसे न खोलें।"
+  },
+  "mr": {
+    "signals": [
+      { "id": "otp", "weight": "high", "reason": "हे OTP किंवा PIN मागत आहे. हे कधीही सांगू नका.", "keywords": ["otp", "ओटीपी", "पिन", "verification code", "cvv", "कोड सांगा", "code share"] },
+      { "id": "kyc", "weight": "high", "reason": "हे KYC अपडेट मागते. बँक SMS वर हे विचारत नाही.", "keywords": ["kyc", "केवायसी", "kyc update", "पॅन अपडेट", "aadhaar update"] },
+      { "id": "blocked", "weight": "high", "reason": "घाबरवण्यासाठी खाते बंद असल्याचे सांगते.", "keywords": ["account blocked", "खाते बंद", "खाते ब्लॉक", "card blocked", "बंद होईल", "deactivate"] },
+      { "id": "lottery", "weight": "high", "reason": "मोफत लॉटरी आणि बक्षीस मेसेज खोटे असतात.", "keywords": ["lottery", "लॉटरी", "you won", "बक्षीस जिंकले", "अभिनंदन", "prize", "jackpot", "kbc"] },
+      { "id": "fee", "weight": "high", "reason": "हे आधी फी मागते. ही नेहमीची फसवणूक आहे.", "keywords": ["processing fee", "फी", "पैसे पाठवा", "send money", "gst", "शुल्क", "pay rs"] },
+      { "id": "refund", "weight": "medium", "reason": "खोटे रिफंड आणि कॅशबॅक पैसे चोरतात.", "keywords": ["refund", "रिफंड", "cashback", "कॅशबॅक", "पैसे परत"] },
+      { "id": "job", "weight": "medium", "reason": "घरी बसून मोठी कमाई नोकऱ्या बहुधा खोट्या असतात.", "keywords": ["work from home", "घरी बसून", "रोज कमवा", "part time", "earn online", "task and earn"] }
+    ],
+    "urgency": ["urgent", "लगेच", "त्वरित", "act now", "शेवटची संधी", "आजच", "expire", "संपेल", "24 तास"],
+    "safeReason": "धोक्याचे शब्द आढळले नाहीत. तरीही सावध रहा.",
+    "suspiciousReason": "काही शब्द धोकादायक वाटतात. सावध रहा.",
+    "scamReason": "हे फसवणूकीसारखे वाटते. जास्त धोका — विश्वास ठेवू नका.",
+    "linkReason": "यात छोटी किंवा विचित्र लिंक आहे. ती उघडू नका."
+  },
+  "gu": {
+    "signals": [
+      { "id": "otp", "weight": "high", "reason": "આ OTP કે PIN માંગે છે. આ ક્યારેય શેર ન કરો.", "keywords": ["otp", "ઓટીપી", "પિન", "verification code", "cvv", "કોડ કહો", "code share"] },
+      { "id": "kyc", "weight": "high", "reason": "આ KYC અપડેટ માંગે છે. બેંક SMS પર આ પૂછતી નથી.", "keywords": ["kyc", "કેવાયસી", "kyc update", "પાન અપડેટ", "aadhaar update"] },
+      { "id": "blocked", "weight": "high", "reason": "ડરાવવા માટે ખાતું બંધ હોવાનું કહે છે.", "keywords": ["account blocked", "ખાતું બંધ", "ખાતું બ્લોક", "card blocked", "બંધ થશે", "deactivate"] },
+      { "id": "lottery", "weight": "high", "reason": "મફત લોટરી અને ઇનામ મેસેજ ખોટા હોય છે.", "keywords": ["lottery", "લોટરી", "you won", "ઇનામ જીત્યા", "અભિનંદન", "prize", "jackpot", "kbc"] },
+      { "id": "fee", "weight": "high", "reason": "આ પહેલા ફી માંગે છે. આ સામાન્ય છેતરરૂપિયું છે.", "keywords": ["processing fee", "ફી", "પૈસા મોકલો", "send money", "gst", "શુલ્ક", "pay rs"] },
+      { "id": "refund", "weight": "medium", "reason": "ખોટા રિફંડ અને કેશબેક પૈસા ચોરી લે છે.", "keywords": ["refund", "રિફંડ", "cashback", "કેશબેક", "પૈસા પરત"] },
+      { "id": "job", "weight": "medium", "reason": "ઘરે બેસી મોટી કમાણી નોકરી મોટે ભાગે ખોટી હોય છે.", "keywords": ["work from home", "ઘરે બેસી", "રોજ કમાઓ", "part time", "earn online", "task and earn"] }
+    ],
+    "urgency": ["urgent", "તરત", "ઝડપથી", "act now", "છેલ્લી તક", "આજે જ", "expire", "સમાપ્ત", "24 કલાક"],
+    "safeReason": "કોઈ ખતરાના શબ્દ મળ્યા નથી. છતાં હંમેશાં સાવધ રહો.",
+    "suspiciousReason": "કેટલાક શબ્દ જોખમી લાગે છે. સાવધ રહો.",
+    "scamReason": "આ છેતરરૂપિયા જેવું લાગે છે. વધુ જોખમ — વિશ્વાસ ન કરો.",
+    "linkReason": "આમાં ટૂંકી કે વિચિત્ર લિંક છે. તેને ખોલશો નહીં."
+  }
+}
