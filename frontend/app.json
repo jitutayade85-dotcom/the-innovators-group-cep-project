@@ -20,7 +20,11 @@
         "backgroundColor": "#000000"
       },
       "package": "com.emergent.surakshitdigital.a9mkeo",
-      "permissions": ["RECEIVE_SMS", "READ_SMS", "POST_NOTIFICATIONS"]
+      "permissions": [
+        "RECEIVE_SMS",
+        "READ_SMS",
+        "POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -50,7 +54,8 @@
           "photosPermission": "Set your profile picture from your gallery"
         }
       ],
-      "expo-notifications"
+      "expo-notifications",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true

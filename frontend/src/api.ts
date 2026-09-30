@@ -50,6 +50,31 @@ export const fetchAlerts = () => apiGet<Alert[]>("/alerts", "cache.alerts");
 
 export const fetchHelplines = () => apiGet<Helpline[]>("/helplines", "cache.helplines");
 
+export const fetchGameItems = () =>
+  apiGet<import("./types").GameItem[]>("/game-items", "cache.gameItems");
+
+export const fetchTestQuestions = () =>
+  apiGet<import("./types").TestQuestion[]>("/test-questions", "cache.testQuestions");
+
+export async function createCertificate(
+  deviceId: string,
+  name: string,
+  level: string,
+  score: number,
+): Promise<{ code: string; date: string; verify_url: string }> {
+  const res = await fetch(`${BASE_URL}/certificate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ device_id: deviceId, name, level, score }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+export function verifyUrl(code: string): string {
+  return `${ROOT_URL}/api/verify/${code}`;
+}
+
 // POST for the AI scam checker (no caching — each check is live).
 export async function checkScam(text: string, lang: LangCode): Promise<ScamCheckResult> {
   const controller = new AbortController();

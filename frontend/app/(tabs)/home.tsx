@@ -29,10 +29,11 @@ export default function Home() {
 
   const tiles = [
     { id: "scam-check", icon: "shield-search", title: t.tileScamCheck, sub: t.tileScamCheckSub, route: "/check" },
+    { id: "play-game", icon: "gamepad-variant", title: t.tilePlayGame, sub: t.tilePlayGameSub, route: "/game" },
     { id: "learn-play", icon: "book-open-variant", title: t.tileLearnPlay, sub: t.tileLearnPlaySub, route: "/learn" },
+    { id: "progress", icon: "chart-line", title: t.tileProgress, sub: t.tileProgressReady, route: "/progress" },
+    { id: "tests", icon: "clipboard-check", title: t.tileTests, sub: t.tileTestsReady, route: "/tests" },
     { id: "sos", icon: "lifebuoy", title: t.tileSos, sub: t.tileSosSub, route: "/sos" },
-    { id: "progress", icon: "chart-line", title: t.tileProgress, sub: t.tileProgressSub, route: null },
-    { id: "tests", icon: "clipboard-check", title: t.tileTests, sub: t.tileTestsSub, route: null },
   ];
 
   return (

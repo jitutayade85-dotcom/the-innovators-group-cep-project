@@ -74,3 +74,26 @@ export interface ProfileInput {
   place?: string | null;
   photo_path?: string | null;
 }
+
+export interface GameItem {
+  id: string;
+  type: "sms" | "whatsapp" | "call" | "website";
+  level: string;
+  category: string;
+  is_scam: boolean;
+  sender: string;
+  body: Localized;
+  explanation: Localized;
+  order: number;
+}
+
+export interface TestQuestion {
+  id: string;
+  level: string;
+  category: string;
+  question: Localized;
+  options: Localized[];
+  correct_index: number;
+  explanation: Localized;
+  order: number;
+}

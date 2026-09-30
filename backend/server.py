@@ -23,13 +23,18 @@ from starlette.middleware.cors import CORSMiddleware
 
 from models import (
     Alert,
+    CertificateIn,
+    GameItem,
     Helpline,
     Lesson,
     Profile,
     ProfileIn,
+    ProgressIn,
     ScamCheckIn,
+    TestQuestion,
 )
 from seed_data import SEED_LESSONS, SEED_ALERTS, SEED_HELPLINES
+from phase2_seed import SEED_GAME_ITEMS, SEED_TEST_QUESTIONS
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -100,6 +105,8 @@ async def seed_if_empty():
         "lessons": SEED_LESSONS,
         "alerts": SEED_ALERTS,
         "helplines": SEED_HELPLINES,
+        "game_items": SEED_GAME_ITEMS,
+        "test_questions": SEED_TEST_QUESTIONS,
     }
     for name, docs in seeds.items():
         col = db[name]
@@ -215,6 +222,88 @@ async def serve_file(path: str):
         logger.error("serve_file failed for %s: %s", path, e)
         raise HTTPException(status_code=404, detail="File not found")
     return Response(content=content, media_type=content_type)
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: training game, tests, progress sync, certificates
+# ---------------------------------------------------------------------------
+@api_router.get("/game-items", response_model=List[GameItem], response_model_by_alias=False)
+async def get_game_items():
+    docs = await db.game_items.find().sort("order", 1).to_list(500)
+    return [GameItem.from_mongo(d) for d in docs]
+
+
+@api_router.get("/test-questions", response_model=List[TestQuestion], response_model_by_alias=False)
+async def get_test_questions():
+    docs = await db.test_questions.find().sort("order", 1).to_list(500)
+    return [TestQuestion.from_mongo(d) for d in docs]
+
+
+@api_router.get("/progress/{device_id}")
+async def get_progress(device_id: str):
+    doc = await db.progress.find_one({"device_id": device_id}, {"_id": 0})
+    if not doc:
+        # Return a fresh empty snapshot (so the app never 404s here).
+        return {
+            "device_id": device_id, "xp": 0, "streak": 0, "last_active": None,
+            "last_test_at": None, "scams_identified": 0, "topics": {}, "daily": {},
+            "badges": [],
+        }
+    return doc
+
+
+@api_router.put("/progress")
+async def put_progress(body: ProgressIn):
+    # Last-write-wins snapshot: the device is the source of truth, this just
+    # backs it up so progress survives a reinstall and syncs when online.
+    snapshot = body.model_dump()
+    await db.progress.update_one(
+        {"device_id": body.device_id}, {"$set": snapshot}, upsert=True
+    )
+    return snapshot
+
+
+@api_router.post("/certificate")
+async def create_certificate(body: CertificateIn):
+    code = uuid.uuid4().hex[:10].upper()
+    date = datetime.now(timezone.utc).strftime("%d %b %Y")
+    doc = {
+        "code": code,
+        "device_id": body.device_id,
+        "name": body.name,
+        "level": body.level,
+        "score": body.score,
+        "date": date,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.certificates.insert_one(dict(doc))
+    return {"code": code, "date": date, "verify_url": f"/api/verify/{code}"}
+
+
+@api_router.get("/verify/{code}")
+async def verify_certificate(code: str):
+    doc = await db.certificates.find_one({"code": code}, {"_id": 0})
+    if not doc:
+        html = (
+            "<html><body style='font-family:sans-serif;text-align:center;padding:40px'>"
+            "<h2 style='color:#BA1A1A'>Certificate not found</h2>"
+            f"<p>No record for code <b>{code}</b>.</p></body></html>"
+        )
+        return Response(content=html, media_type="text/html", status_code=404)
+    html = (
+        "<html><body style='font-family:sans-serif;text-align:center;padding:40px;background:#F9F8F6'>"
+        "<div style='max-width:480px;margin:auto;background:#fff;border:2px solid #1F513F;"
+        "border-radius:16px;padding:32px'>"
+        "<h2 style='color:#1F513F'>✅ Verified Certificate</h2>"
+        "<p style='color:#2D6A4F;font-weight:bold'>Surakshit Digital — Cyber Safety</p>"
+        f"<p style='font-size:20px;margin:16px 0'><b>{doc['name']}</b></p>"
+        f"<p>Level: <b>{doc['level'].title()}</b></p>"
+        f"<p>Score: <b>{doc['score']}%</b></p>"
+        f"<p>Date: {doc['date']}</p>"
+        f"<p style='color:#5A5E59;font-size:12px;margin-top:24px'>Verification code: {doc['code']}</p>"
+        "</div></body></html>"
+    )
+    return Response(content=html, media_type="text/html")
 
 
 # ---------------------------------------------------------------------------

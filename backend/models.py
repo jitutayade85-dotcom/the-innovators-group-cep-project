@@ -110,3 +110,45 @@ class ProfileIn(BaseModel):
     age: Optional[int] = Field(default=None, ge=1, le=120)
     place: Optional[str] = Field(default=None, max_length=120)
     photo_path: Optional[str] = None
+
+
+# --- Phase 2: training game + tests ---
+class GameItem(BaseDocument):
+    type: str          # sms | whatsapp | call | website
+    level: str         # bronze | silver | gold | platinum | diamond
+    category: str      # phishing | upi | job | trading | loan
+    is_scam: bool
+    sender: str        # shown as the sender / caller / url
+    body: LocalizedText
+    explanation: LocalizedText
+    order: int
+
+
+class TestQuestion(BaseDocument):
+    level: str
+    category: str
+    question: LocalizedText
+    options: List[LocalizedText]
+    correct_index: int
+    explanation: LocalizedText
+    order: int
+
+
+# Progress is a flexible per-device snapshot (last-write-wins on sync).
+class ProgressIn(BaseModel):
+    device_id: str = Field(min_length=4, max_length=100)
+    xp: int = 0
+    streak: int = 0
+    last_active: Optional[str] = None
+    last_test_at: Optional[str] = None
+    scams_identified: int = 0
+    topics: dict = Field(default_factory=dict)   # {category: {seen, correct}}
+    daily: dict = Field(default_factory=dict)     # {"YYYY-MM-DD": {xp, correct, played}}
+    badges: List[str] = Field(default_factory=list)
+
+
+class CertificateIn(BaseModel):
+    device_id: str = Field(min_length=4, max_length=100)
+    name: str = Field(min_length=1, max_length=80)
+    level: str
+    score: int = Field(ge=0, le=100)

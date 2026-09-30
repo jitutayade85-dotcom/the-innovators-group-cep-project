@@ -12,6 +12,7 @@ import { ErrorBoundary } from "@/src/components/error-boundary";
 import { queryClient } from "@/src/query-client";
 import { LanguageProvider } from "@/src/i18n";
 import { ProfileProvider } from "@/src/features/profile/ProfileContext";
+import { ProgressProvider } from "@/src/features/game/ProgressContext";
 
 // Disable logbox errors etc so that users can see the app
 // and agent works as expected.
@@ -36,7 +37,9 @@ export default function RootLayout() {
         <KeyboardProvider>
           <LanguageProvider>
             <ProfileProvider>
-              <Stack screenOptions={{ headerShown: false }} />
+              <ProgressProvider>
+                <Stack screenOptions={{ headerShown: false }} />
+              </ProgressProvider>
             </ProfileProvider>
           </LanguageProvider>
         </KeyboardProvider>
