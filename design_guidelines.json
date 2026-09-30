@@ -1,0 +1,173 @@
+{
+  "app_name": "Surakshit Digital",
+  "personality": "2 Material You / Expressive LIGHT",
+  "personality_one_liner": "An accessible, high-contrast, friendly cyber safety companion designed for rural youth with low literacy and low-end Android phones.",
+  "color": {
+    "surface": "#F9F8F6",
+    "onSurface": "#1A1C18",
+    "surfaceSecondary": "#F1EFEC",
+    "onSurfaceSecondary": "#434842",
+    "surfaceTertiary": "#E5E3DF",
+    "onSurfaceTertiary": "#747972",
+    "surfaceInverse": "#2F312D",
+    "onSurfaceInverse": "#F1EFEC",
+    "brand": "#1F513F",
+    "brandPrimary": "#1F513F",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#3A7D64",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#D6E8DF",
+    "onBrandTertiary": "#0B2119",
+    "success": "#2D6A4F",
+    "onSuccess": "#FFFFFF",
+    "warning": "#B5651D",
+    "onWarning": "#FFFFFF",
+    "error": "#BA1A1A",
+    "onError": "#FFFFFF",
+    "info": "#2B5C8F",
+    "onInfo": "#FFFFFF",
+    "border": "#D8D6D0",
+    "borderStrong": "#1F513F",
+    "divider": "#E8E6E0",
+    "muted": "#5A5E59",
+    "onBrand": "#FFFFFF"
+  },
+  "typography": {
+    "displayFontFamily": "Plus Jakarta Sans",
+    "textFontFamily": "Geist",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous touch targets (min 56pt) and comfortable vertical rhythm for low literacy and accessibility.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 8,
+    "md": 16,
+    "lg": 24,
+    "pill": 999
+  },
+  "shadow_tier": "1",
+  "navigation": "bottom_tabs",
+  "icon_set": "MaterialCommunityIcons",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Use subtle glass effect on sticky headers and bottom tab bar over scrolling content",
+      "Ensure high-contrast translucent tinted base for foreground readability"
+    ],
+    "dont's": [
+      "Never blur body text or form inputs",
+      "Never use glass without a solid tinted background fallback for low-end Android"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Home",
+      "purpose": "Main dashboard providing instant access to lessons, scam checking, live alerts, and emergency helplines.",
+      "states": {
+        "loading": "Showing skeleton cards for modules and quick scam scanner.",
+        "empty": "No recent cached lessons. Tap 'Learn' to download offline packs.",
+        "error": "Failed to load latest security feed. Showing offline cached alerts."
+      },
+      "layout": "Top language switcher bar + greeting header + AI scam quick checker card + 4 large tile grid (Learn, Scam Feed, Quizzes, Helplines) with big icons and local language subtitles."
+    },
+    {
+      "name": "Learn",
+      "purpose": "Short, audio-supported cyber safety lessons with big icons and simple bullet points for rural youth.",
+      "states": {
+        "loading": "Showing lesson category skeleton loader.",
+        "empty": "No lessons available offline. Check connection to sync.",
+        "error": "Could not load lessons. Retry button with offline cache fallback."
+      },
+      "layout": "Category filter chips at top + vertical list of large lesson cards with progress rings, estimated time, and audio play button."
+    },
+    {
+      "name": "LessonDetail",
+      "purpose": "Immersive lesson view featuring big visual illustrations, simple steps, and interactive voice narration.",
+      "states": {
+        "loading": "Loading lesson media and text translations.",
+        "empty": "Lesson content not found.",
+        "error": "Failed to load lesson. Retry button."
+      },
+      "layout": "Full-bleed hero banner with gradient scrim + key takeaway cards + step-by-step pictorial guide + 'Take Quiz' sticky bottom CTA."
+    },
+    {
+      "name": "ScamChecker",
+      "purpose": "AI scam message analyzer where users paste suspicious SMS/WhatsApp text to receive an instant Safe/Suspicious/Scam verdict.",
+      "states": {
+        "loading": "AI analyzing text patterns and sender heuristics...",
+        "empty": "Paste a suspicious message or tap an example below.",
+        "error": "Network timeout. Ensure offline scanning cache is active."
+      },
+      "layout": "Header title + large text input box with paste shortcut + quick example chips ('Bank OTP Scam', 'Lottery Win SMS') + prominent 'Check Safety' button + verdict result card."
+    },
+    {
+      "name": "ScamFeed",
+      "purpose": "Live or cached feed of latest trending online scams in India with clear warning badges.",
+      "states": {
+        "loading": "Fetching latest cyber threat intelligence...",
+        "empty": "No active scam alerts in this region.",
+        "error": "Unable to refresh feed. Showing last cached alerts."
+      },
+      "layout": "Warning banner at top + chronological feed of scam alert cards featuring severity tags ('High Risk'), description in selected language, and share button."
+    },
+    {
+      "name": "Helplines",
+      "purpose": "Direct directory of Indian cyber crime helplines (1930, CyberDost) with one-tap calling.",
+      "states": {
+        "loading": "Loading emergency helpline directory...",
+        "empty": "No helplines configured.",
+        "error": "Failed to load numbers. Retry button."
+      },
+      "layout": "Emergency SOS banner at top with 1930 tap-to-call button + categorized list of national and state cyber helplines with big phone icons."
+    }
+  ],
+  "images": {
+    "shield_logo": {
+      "url": "https://images.unsplash.com/photo-1751448555253-f39c06e29d82?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxjeWJlciUyMHNlY3VyaXR5JTIwc2FmZXR5JTIwc2hpZWxkJTIwaWNvbiUyMHBuZyUyMHRyYW5zcGFyZW50fGVufDB8fHx8MTc5MDczNDc5MHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Cyber safety shield logo"
+    },
+    "scam_alert_hero": {
+      "url": "https://images.unsplash.com/photo-1578986568309-707ef1017f69?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHxwaGlzaGluZyUyMHNjYW0lMjB3YXJuaW5nJTIwYWxlcnQlMjBzaWduJTIwcG5nfGVufDB8fHx8MTc5MDczNDc5MHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Scam warning sign"
+    },
+    "helpline_hero": {
+      "url": "https://images.unsplash.com/photo-1637193080311-a6e6e11f0e00?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHxlbW`VyZ2VuY3klMjBoZWxwbGluZSUyMHBob25lJTIwaWNvbiUyMHBuZzh8MHww&ixlib=rb-4.1.0&q=85",
+      "alt": "Emergency phone helpline"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Build Surakshit Digital as an offline-friendly, multilingual Expo React Native app with FastAPI backend.",
+    "Support English, Hindi (हिन्दी), Marathi (मराठी), and Gujarati (ગુજરાती) via an easy in-app language switcher at the top of the home screen.",
+    "Implement low-literacy UX: large touch targets (min 56pt), big icons, minimal text, and high contrast botanical/ceramic color palette.",
+    "Never hardcode text; use a robust localization dictionary for all strings across all 4 languages.",
+    "Provide a dedicated AI scam message checker screen where users paste SMS/WhatsApp text and get a clear Safe/Suspicious/Scam verdict with 2-3 simple tips.",
+    "Include a helpline directory with one-tap calling (e.g. 1930 National Cyber Crime Helpline).",
+    "Ensure robust Loading, Empty, and Error states for every screen with offline caching fallback."
+  ]
+}
