@@ -14,7 +14,6 @@ from typing import List
 import requests
 from bson import ObjectId
 from dotenv import load_dotenv
-from emergentintegrations.llm.chat import LlmChat, UserMessage
 from fastapi import APIRouter, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 from motor.motor_asyncio import AsyncIOMotorClient
