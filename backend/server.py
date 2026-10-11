@@ -335,34 +335,29 @@ def _extract_json(raw: str) -> dict:
 @api_router.post("/check-scam")
 async def check_scam(body: ScamCheckIn):
     lang = body.lang if body.lang in LANG_NAMES else "en"
-    try:
-        chat = LlmChat(
-            api_key=os.environ["EMERGENT_LLM_KEY"],
-            session_id=f"scam-check-{uuid.uuid4()}",
-            system_message=SYSTEM_PROMPT.replace("{language}", LANG_NAMES[lang]),
-        ).with_model("openai", "gpt-5.4-mini")
+    text = body.text.lower()
 
-        user_message = UserMessage(
-            text=f"Message to analyze:\n{body.text.strip()}\n\nRespond with JSON only."
-        )
-        reply = await chat.send_message(user_message)
-        data = _extract_json(reply)
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error("check-scam failed: %s", e)
-        raise HTTPException(status_code=502, detail="AI could not analyze this message")
+    # Basic keyword check
+    suspicious_words = ["otp", "kyc", "lottery", "prize", "blocked", "link", "bank", "urgent"]
+    is_suspicious = any(word in text for word in suspicious_words)
 
-    verdict = str(data.get("verdict", "suspicious"))
-    if verdict not in {"safe", "suspicious", "scam"}:
+    if is_suspicious:
         verdict = "suspicious"
-    try:
-        confidence = max(0, min(100, int(data.get("confidence", 70))))
-    except (TypeError, ValueError):
-        confidence = 70
-    tips = [str(t)[:120] for t in data.get("tips", [])][:3]
+        confidence = 85
+        tips = [
+            "Never share OTP or passwords.",
+            "Do not click unknown links.",
+            "Contact your official bank branch."
+        ]
+    else:
+        verdict = "safe"
+        confidence = 90
+        tips = [
+            "Looks safe, but always stay alert.",
+            "Verify the sender before acting."
+        ]
 
-    # Store an anonymous log for analytics (no user identity involved).
+    # Analytics ke liye log store karein
     await db.scam_checks.insert_one(
         {
             "text": body.text.strip()[:500],
@@ -373,6 +368,7 @@ async def check_scam(body: ScamCheckIn):
         }
     )
     return {"verdict": verdict, "confidence": confidence, "tips": tips}
+
 
 
 # --- CORS so the Expo web preview can call the API ---
